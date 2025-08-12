@@ -136,34 +136,25 @@ mm supports shell completion for both bash and zsh to provide auto-completion fo
 
 ### Bash Setup
 
-1. **Generate completion script:**
-   ```bash
-   mm completions bash > ~/.mm-completion.bash
-   ```
+```bash
+# 1. Add to ~/.bashrc or ~/.profile
+echo "source <(mm completions bash)" >> ~/.bashrc
 
-2. **Source the completion in your shell:**
-   ```bash
-   # Add to your ~/.bashrc or ~/.bash_profile
-   source ~/.mm-completion.bash
-   ```
+# 2. Then restart shell or run:
+source ~/.bashrc
 
-3. **Or install system-wide (requires sudo):**
-   ```bash
-   mm completions bash | sudo tee /etc/bash_completion.d/mm-completion.bash
-   ```
+# Note: bash-completion must be installed and enabled on your system.
+```
 
 ### Zsh Setup
 
-1. **Generate completion script:**
-   ```bash
-   mm completions zsh > ~/.mm-completion.zsh
-   ```
+```bash
+# 1. Add to ~/.zshrc or ~/.profile
+echo "source <(mm completions zsh)" >> ~/.zshrc
 
-2. **Source the completion in your shell:**
-   ```bash
-   # Add to your ~/.zshrc
-   source ~/.mm-completion.zsh
-   ```
+# 2. Then restart shell or run:
+source ~/.zshrc
+```
 
 
 ### Completion Features
@@ -175,7 +166,6 @@ mm supports shell completion for both bash and zsh to provide auto-completion fo
 - **Option completion**: Auto-completion for command flags and options
 - **Workspace completion**: Tab completion for workspace names in `workspace use/remove` commands
 
-After setup, restart your shell or run `source ~/.bashrc` (bash) / `source ~/.zshrc` (zsh) to enable completions.
 
 ## mm-mcp - MCP Server for AI Assistants
 
