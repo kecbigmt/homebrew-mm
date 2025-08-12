@@ -1,9 +1,9 @@
 class MmMcp < Formula
   desc "Personal Knowledge Management MCP Server"
   homepage "https://github.com/kecbigmt/homebrew-mm"
-  url "https://github.com/kecbigmt/homebrew-mm/releases/download/v0.1.0/mm-mcp.tar.gz"
-  sha256 "49253fe4645282ea789f6b3214d87afb3b3f58a922a315fb3f514ffd7f0eeabd"
-  version "0.1.0"
+  url "https://github.com/kecbigmt/mm/releases/download/v0.2.0/mm-mcp.tar.gz"
+  sha256 "f160898d1bf4f53781af4e8933a06dc33ab629688501a1e345cb12309d9f8c74"
+  version "0.2.0"
 
   def install
     bin.install "mm-mcp"
