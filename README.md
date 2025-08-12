@@ -29,9 +29,12 @@ mm is a personal knowledge management tool that helps you organize notes, tasks,
 ### Features
 
 - **Three Node Types**: Notes, Tasks, and Events
-- **Date-Based Organization**: Smart time-based filtering with default 7-day range
+- **Date-Based Organization**: Smart time-based filtering with default 15-day range
 - **Project & Context Tagging**: Using `+project` and `@context` syntax (todo.txt compatible)
 - **Flexible Date Support**: Various date formats, relative dates (today/tomorrow), and date ranges
+- **Shell Tab Completion**: Auto-complete for commands, projects, and contexts
+- **Dynamic Date Range Parsing**: Support for last-Xd and next-Xd formats
+- **Inline Metadata Parsing**: Parse metadata directly in node titles
 - **MCP Integration**: Use as Model Context Protocol server for AI assistants
 - **Simplified Commands**: Intuitive command structure with helpful aliases
 
@@ -40,26 +43,44 @@ mm is a personal knowledge management tool that helps you organize notes, tasks,
 #### Basic Usage
 
 ```bash
-# Create nodes
+# Create nodes (simplified syntax)
 mm note "Meeting insights" --project work
 mm task "Review PR" --date 2025-01-15
 mm event "Team meeting" --date "2025-01-15 14:00"
 
+# Create nodes with inline metadata parsing
+mm note "Meeting insights +work @office"
+mm task "Review PR +development @github .tomorrow"
+mm event "Team meeting +work @office .2025-01-15"
+
 # Using aliases for faster typing
-mm n "Quick note"          # 'n' alias for 'note'
-mm t "Quick task"          # 't' alias for 'task'
-mm ev "Quick event"        # 'ev' alias for 'event'
+mm n "Quick note +personal"    # 'n' alias for 'note'
+mm t "Quick task @home"        # 't' alias for 'task'
+mm ev "Quick event +work"      # 'ev' alias for 'event'
 
-# List nodes
-mm list                    # Last 7 days (default)
-mm list --date today       # Today only
+# List nodes with date-based filtering
+mm list                    # Default range (last-7d..next-7d)
+mm list today              # Today only
+mm list last-7d            # Last 7 days
+mm list this-week          # This week
 mm tasks --status closed   # Only closed tasks
-mm events --date tomorrow  # Tomorrow's events
+mm events tomorrow         # Tomorrow's events
 
-# Show and edit
+# Show and edit (with aliases)
 mm show abc123             # Show details
+mm s abc123                # 's' alias for 'show'
 mm edit abc123 --title "New title"
-mm close abc123            # Close a task/event
+mm e abc123 --project work # 'e' alias for 'edit'
+
+# Workspace management (unified under 'workspace')
+mm workspace add work      # or 'mm ws add work'
+mm workspace use work      # or 'mm ws use work'
+mm workspace list          # or 'mm ws ls'
+mm workspace remove old    # or 'mm ws rm old'
+
+# List projects and contexts
+mm projects                # List projects from nodes
+mm contexts                # List contexts from nodes
 ```
 
 #### Workspace Management
@@ -74,27 +95,98 @@ mm workspace remove old    # Delete workspace
 ### Command Reference
 
 #### Node Creation
-- `mm note [title]` (`mm n`) - Create a note
-- `mm task [title]` (`mm t`) - Create a task
-- `mm event [title]` (`mm ev`) - Create an event
+- `mm note [title]` (`mm n [title]`) - Create a note
+- `mm task [title]` (`mm t [title]`) - Create a task
+- `mm event [title]` (`mm ev [title]`) - Create an event
 
 #### Node Operations
-- `mm list` (`mm ls`) - List all nodes (last 7 days)
-- `mm notes` (`mm ns`) - List notes only
-- `mm tasks` (`mm ts`) - List tasks only
-- `mm events` (`mm evs`) - List events only
-- `mm show <id>` (`mm s`) - Show node details
-- `mm edit <id>` (`mm e`) - Edit a node
-- `mm close <id>` (`mm cl`) - Close a task/event
-- `mm reopen <id>` (`mm op`) - Reopen a closed task/event
-- `mm remove <id>` (`mm rm`) - Delete a node
+- `mm list [date]` (`mm ls [date]`) - List nodes within date range (default: last-7d..next-7d)
+- `mm notes [date]` (`mm ns [date]`) - List notes only
+- `mm tasks [date]` (`mm ts [date]`) - List tasks only
+- `mm events [date]` (`mm evs [date]`) - List events only
+- `mm show <id>` (`mm s <id>`) - Show node details
+- `mm edit <id>` (`mm e <id>`) - Edit a node
+- `mm close <id>` (`mm cl <id>`) - Close a task/event
+- `mm reopen <id>` (`mm op <id>`) - Reopen a closed task/event
+- `mm remove <id>` (`mm rm <id>`) - Delete a node
 
-#### Date Filtering Options
+#### Project and Context Management
+- `mm projects` - List projects from nodes
+- `mm contexts` - List contexts from nodes
+
+#### Workspace Management
+- `mm workspace` (`mm ws`) - Workspace commands
+  - `list` (`ls`) - List workspaces
+  - `add <name>` - Create workspace
+  - `use <name>` - Switch to workspace
+  - `remove <name>` (`rm <name>`) - Delete workspace
+
+#### Date Input Options
 - `today`, `tomorrow`, `yesterday`
 - `this-week`, `last-week`, `next-week`
 - `this-month`, `last-month`, `next-month`
-- `last-7d`, `last-30d` (relative ranges)
-- `2025-01-15..2025-01-31` (explicit date ranges)
+- `last-7d`, `next-7d` (relative ranges)
+- `1/15`, `2025/1/15` (flexible formats)
+- `2025-01-15..2025-01-31`, `1/1..1/7` (date ranges)
+
+## Shell Completion Setup
+
+mm supports shell completion for both bash and zsh to provide auto-completion for commands, options, node IDs, projects, and contexts.
+
+### Bash Setup
+
+1. **Generate completion script:**
+   ```bash
+   mm completions bash > ~/.mm-completion.bash
+   ```
+
+2. **Source the completion in your shell:**
+   ```bash
+   # Add to your ~/.bashrc or ~/.bash_profile
+   source ~/.mm-completion.bash
+   ```
+
+3. **Or install system-wide (requires sudo):**
+   ```bash
+   mm completions bash | sudo tee /etc/bash_completion.d/mm-completion.bash
+   ```
+
+### Zsh Setup
+
+1. **Generate completion script:**
+   ```bash
+   mm completions zsh > ~/.mm-completion.zsh
+   ```
+
+2. **Source the completion in your shell:**
+   ```bash
+   # Add to your ~/.zshrc
+   source ~/.mm-completion.zsh
+   ```
+
+3. **Or add to your fpath (recommended for zsh):**
+   ```bash
+   # Create a directory for completions if it doesn't exist
+   mkdir -p ~/.zsh/completions
+   
+   # Generate completion file
+   mm completions zsh > ~/.zsh/completions/_mm
+   
+   # Add to your ~/.zshrc (before compinit)
+   fpath=(~/.zsh/completions $fpath)
+   autoload -U compinit && compinit
+   ```
+
+### Completion Features
+
+- **Command completion**: Tab completion for all commands and aliases (`note`, `n`, `task`, `t`, etc.)
+- **Node ID completion**: Auto-completion of 7-character short IDs for `show`, `edit`, `close`, `remove` commands
+- **Project/Context completion**: Tab completion for existing `+project` and `@context` tags
+- **Date completion**: Smart completion for date inputs (`today`, `tomorrow`, `last-7d`, etc.)
+- **Option completion**: Auto-completion for command flags and options
+- **Workspace completion**: Tab completion for workspace names in `workspace use/remove` commands
+
+After setup, restart your shell or run `source ~/.bashrc` (bash) / `source ~/.zshrc` (zsh) to enable completions.
 
 ## mm-mcp - MCP Server for AI Assistants
 
