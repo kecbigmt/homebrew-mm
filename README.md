@@ -33,8 +33,9 @@ mm is a personal knowledge management tool that helps you organize notes, tasks,
 - **Project & Context Tagging**: Using `+project` and `@context` syntax (todo.txt compatible)
 - **Flexible Date Support**: Various date formats, relative dates (today/tomorrow), and date ranges
 - **Shell Tab Completion**: Auto-complete for commands, projects, and contexts
-- **Dynamic Date Range Parsing**: Support for last-Xd and next-Xd formats
-- **Inline Metadata Parsing**: Parse metadata directly in node titles
+- **Advanced Date Input Support**: Date aliases (td/tm/yd), relative offsets (+3d/-7d), weekday specs (next-friday/nf), and enhanced M/D format
+- **Inline Metadata Parsing**: Parse metadata directly in node titles using +project, @context, and .date syntax
+- **Streaming Display**: Date-grouped output with system pager integration and enhanced event formatting
 - **MCP Integration**: Use as Model Context Protocol server for AI assistants
 - **Simplified Commands**: Intuitive command structure with helpful aliases
 
