@@ -165,18 +165,6 @@ mm supports shell completion for both bash and zsh to provide auto-completion fo
    source ~/.mm-completion.zsh
    ```
 
-3. **Or add to your fpath (recommended for zsh):**
-   ```bash
-   # Create a directory for completions if it doesn't exist
-   mkdir -p ~/.zsh/completions
-   
-   # Generate completion file
-   mm completions zsh > ~/.zsh/completions/_mm
-   
-   # Add to your ~/.zshrc (before compinit)
-   fpath=(~/.zsh/completions $fpath)
-   autoload -U compinit && compinit
-   ```
 
 ### Completion Features
 
