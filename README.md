@@ -30,12 +30,14 @@ mm is a personal knowledge management tool that helps you organize notes, tasks,
 
 - **Three Node Types**: Notes, Tasks, and Events
 - **Date-Based Organization**: Smart time-based filtering with default 15-day range
+- **Node Ordering**: LexoRank-based positioning system for flexible node arrangement
 - **Project & Context Tagging**: Using `+project` and `@context` syntax (todo.txt compatible)
 - **Flexible Date Support**: Various date formats, relative dates (today/tomorrow), and date ranges
-- **Shell Tab Completion**: Auto-complete for commands, projects, and contexts
+- **Shell Tab Completion**: Auto-complete for commands, projects, contexts, and node IDs
 - **Advanced Date Input Support**: Date aliases (td/tm/yd), relative offsets (+3d/-7d), weekday specs (next-friday/nf), and enhanced M/D format
 - **Inline Metadata Parsing**: Parse metadata directly in node titles using +project, @context, and .date syntax
-- **Streaming Display**: Date-grouped output with system pager integration and enhanced event formatting
+- **Streaming Display**: Date-grouped output with relative dates, bold today highlighting, and enhanced formatting
+- **Event Time Management**: Support for event start times and durations
 - **MCP Integration**: Use as Model Context Protocol server for AI assistants
 - **Simplified Commands**: Intuitive command structure with helpful aliases
 
@@ -47,12 +49,12 @@ mm is a personal knowledge management tool that helps you organize notes, tasks,
 # Create nodes (simplified syntax)
 mm note "Meeting insights" --project work
 mm task "Review PR" --date 2025-01-15
-mm event "Team meeting" --date "2025-01-15 14:00"
+mm event "Team meeting" --date "2025-01-15" --start-at "2025-01-15T14:00:00" --duration 1h
 
 # Create nodes with inline metadata parsing
 mm note "Meeting insights +work @office"
 mm task "Review PR +development @github .tomorrow"
-mm event "Team meeting +work @office .2025-01-15"
+mm event "Team meeting +work @office .2025-01-15" --duration 1h
 
 # Using aliases for faster typing
 mm n "Quick note +personal"    # 'n' alias for 'note'
@@ -72,6 +74,11 @@ mm show abc123             # Show details
 mm s abc123                # 's' alias for 'show'
 mm edit abc123 --title "New title"
 mm e abc123 --project work # 'e' alias for 'edit'
+
+# Move nodes
+mm mv abc123 tomorrow      # Move to tomorrow
+mm mv abc123 head          # Move to beginning of current date
+mm mv abc123 after:def456  # Position after another node
 
 # Workspace management (unified under 'workspace')
 mm workspace add work      # or 'mm ws add work'
@@ -107,6 +114,7 @@ mm workspace remove old    # Delete workspace
 - `mm events [date]` (`mm evs [date]`) - List events only
 - `mm show <id>` (`mm s <id>`) - Show node details
 - `mm edit <id>` (`mm e <id>`) - Edit a node
+- `mm move <ids...> <destination>` (`mm mv`) - Move and reorder nodes
 - `mm close <id>` (`mm cl <id>`) - Close a task/event
 - `mm reopen <id>` (`mm op <id>`) - Reopen a closed task/event
 - `mm remove <id>` (`mm rm <id>`) - Delete a node
@@ -129,6 +137,12 @@ mm workspace remove old    # Delete workspace
 - `last-7d`, `next-7d` (relative ranges)
 - `1/15`, `2025/1/15` (flexible formats)
 - `2025-01-15..2025-01-31`, `1/1..1/7` (date ranges)
+
+#### Move Command Destinations
+- `tomorrow`, `2025-01-15` - Move to specific date
+- `head`, `tail` - Move to beginning/end of the date
+- `after:node123`, `before:node123` - Position relative to another node
+- `head:tomorrow`, `tail:2025-01-15` - Combine date and position
 
 ## Shell Completion Setup
 
@@ -160,9 +174,10 @@ source ~/.zshrc
 ### Completion Features
 
 - **Command completion**: Tab completion for all commands and aliases (`note`, `n`, `task`, `t`, etc.)
-- **Node ID completion**: Auto-completion of 7-character short IDs for `show`, `edit`, `close`, `remove` commands
+- **Node ID completion**: Auto-completion of 7-character short IDs for `show`, `edit`, `move`, `close`, `remove` commands
 - **Project/Context completion**: Tab completion for existing `+project` and `@context` tags
 - **Date completion**: Smart completion for date inputs (`today`, `tomorrow`, `last-7d`, etc.)
+- **Move destination completion**: Context-aware completion for colon syntax (`after:`, `before:`, `head:`, `tail:`)
 - **Option completion**: Auto-completion for command flags and options
 - **Workspace completion**: Tab completion for workspace names in `workspace use/remove` commands
 
@@ -205,6 +220,7 @@ Add the following to your `claude_desktop_config.json`:
 
 #### Edit and Manage
 - **`edit_node`**: Edit existing node
+- **`move_node`**: Move and reorder nodes with destination syntax
 - **`close_task`**: Mark task as completed
 - **`reopen_task`**: Mark task as not completed
 - **`remove_node`**: Delete a node

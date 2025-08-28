@@ -1,9 +1,9 @@
 class MmCli < Formula
   desc "Personal Knowledge Management CLI Tool"
   homepage "https://github.com/kecbigmt/homebrew-mm"
-  url "https://github.com/kecbigmt/homebrew-mm/releases/download/v0.2.0/mm-cli.tar.gz"
-  sha256 "28b8d1364ddafd0d1e18ebf3f8c3d4bb703516ecf9ff7b32e75d35a83c60eab3"
-  version "0.2.0"
+  url "https://github.com/kecbigmt/homebrew-mm/releases/download/v0.3.0/mm-cli.tar.gz"
+  sha256 "0a4dd5efbe8d1c78ac134371dbf0565fefc32bb1ec1fd12b36743635728b703a"
+  version "0.3.0"
 
   def install
     bin.install "mm"
